@@ -41,7 +41,7 @@ An AI-powered fitness assistant built with **Next.js**, **TypeScript**, and **Ta
 
 ```bash
 # Clone the repository
-git clone https://github.com/adithya3104/ai-fitness-app
+git clone https://github.com/adithya3108/ai-fitness-app
 
 # Navigate to project directory
 cd ai-fitness-app
