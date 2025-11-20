@@ -1,26 +1,490 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Color tokens */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --foreground-rgb: 15, 23, 42;       /* slate-900 */
+  --background-rgb: 241, 245, 249;    /* slate-100 */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 226, 232, 240;  /* slate-200 */
+    --background-rgb: 2, 6, 23;       /* slate-950 */
   }
 }
 
+/* Base body styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background-color: rgb(var(--background-rgb));
+}
+
+/* Reusable "card" container (no @apply, pure CSS) */
+.card {
+  border-radius: 1rem;              /* ~ rounded-2xl */
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(226, 232, 240, 0.8); /* slate-200/80 */
+  background-color: rgba(255, 255, 255, 0.9); /* white/90 */
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06); /* soft shadow */
+}
+
+.dark .card {
+  border-color: rgba(51, 65, 85, 1);       /* slate-700 */
+  background-color: rgba(15, 23, 42, 0.9); /* slate-900/90 */
+}
+
+/* Section title helper */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;  /* text-2xl-ish on small screens */
+  font-weight: 600;
+  color: rgb(15, 23, 42); /* slate-900 */
+}
+
+.dark .section-title {
+  color: rgb(248, 250, 252); /* slate-50 */
+}
+
+/* Small pill/chip helper */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: rgb(248, 250, 252); /* slate-50/100-ish */
+  color: rgb(71, 85, 105);              /* slate-600/700 */
+}
+
+.dark .chip {
+  background-color: rgb(30, 41, 59); /* slate-800 */
+  color: rgb(226, 232, 240);         /* slate-200 */
+}
+
+/* Utility from Next template */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Smooth transitions for dark mode / hovers */
+* {
+  transition: background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.15s ease;
+}
+
+/* ---------- Form card layout helpers ---------- */
+
+.form-shell {
+  max-width: 720px;           /* narrow center column */
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 3rem;
+}
+
+.form-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px 24px 28px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+}
+
+.dark .form-card {
+  background: #020617;        /* slate-950-ish */
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.75);
+}
+
+/* 2-column grid on desktop, 1-column on mobile */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .form-grid .full-span {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Inputs / selects */
+.form-field,
+.form-select {
+  width: 100%;
+  border-radius: 9999px;       /* pill-like */
+  border: 1px solid #e5e7eb;  /* gray-200 */
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #0f172a;             /* slate-900 */
+  box-sizing: border-box;
+}
+
+.form-field::placeholder,
+.form-textarea::placeholder {
+  color: #9ca3af;             /* gray-400 */
+}
+
+.dark .form-field,
+.dark .form-select {
+  border-color: #334155;      /* slate-700 */
+  background: #020617;
+  color: #e5e7eb;
+}
+
+/* Textarea */
+.form-textarea {
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #0f172a;
+  min-height: 90px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.dark .form-textarea {
+  border-color: #334155;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+/* Submit button */
+.form-submit-btn {
+  width: 100%;
+  margin-top: 22px;
+  border-radius: 9999px;
+  border: none;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background: #020617;        /* black-ish */
+  cursor: pointer;
+}
+
+.form-submit-btn:hover {
+  background: #0f172a;
+}
+
+.dark .form-submit-btn {
+  background: #e5e7eb;
+  color: #020617;
+}
+
+.dark .form-submit-btn:hover {
+  background: #ffffff;
+}
+
+/* --- Generic section wrapper is already handled by .card --- */
+
+/* NAV CARDS FOR WORKOUT / DIET / MOTIVATION */
+.nav-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.nav-card {
+  flex: 1 1 200px;
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  padding: 0.9rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+  transition: box-shadow 0.15s ease, transform 0.12s ease,
+    border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.nav-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+.nav-card--active {
+  border-color: #2563eb;
+  box-shadow: 0 18px 45px rgba(37, 99, 235, 0.32);
+}
+
+.dark .nav-card {
+  background: #020617;
+  border-color: #1f2937;
+}
+
+.dark .nav-card--active {
+  border-color: #3b82f6;
+}
+
+.nav-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.nav-subtitle {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+.dark .nav-title {
+  color: #e5e7eb;
+}
+
+.dark .nav-subtitle {
+  color: #9ca3af;
+}
+
+.nav-card-emoji {
+  font-size: 1.5rem;
+}
+
+/* WEEK PILLS FOR DAYS */
+.week-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.week-pill {
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.75rem;
+  background: #f9fafb;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.week-pill-day {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.week-pill-meta {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.week-pill--active {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.dark .week-pill {
+  border-color: #1f2937;
+  background: #020617;
+}
+
+.dark .week-pill-day {
+  color: #e5e7eb;
+}
+
+.dark .week-pill-meta {
+  color: #9ca3af;
+}
+
+.dark .week-pill--active {
+  border-color: #3b82f6;
+  background: #0b1120;
+}
+
+/* EXERCISE CARDS */
+.exercise-card {
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+}
+
+.dark .exercise-card {
+  border-color: #1f2937;
+  background: #020617;
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.exercise-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.exercise-index {
+  font-size: 0.75rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  margin-left: 0.25rem;
+}
+
+.exercise-desc {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: #4b5563;
+}
+
+.dark .exercise-name {
+  color: #e5e7eb;
+}
+
+.dark .exercise-desc {
+  color: #9ca3af;
+}
+
+.exercise-meta {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.4rem;
+}
+
+.meta-box {
+  border-radius: 0.55rem;
+  padding: 0.25rem 0.55rem;
+  background: #f9fafb;
+  text-align: center;
+}
+
+.meta-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+}
+
+.meta-value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dark .meta-box {
+  background: #0b1120;
+}
+
+.dark .meta-label {
+  color: #9ca3af;
+}
+
+.dark .meta-value {
+  color: #e5e7eb;
+}
+
+.exercise-footer {
+  margin-top: 0.5rem;
+}
+
+.view-image-btn {
+  font-size: 0.8rem;
+  color: #2563eb;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.view-image-btn:hover {
+  text-decoration: underline;
+}
+
+/* AI Tips rows */
+.ai-tip-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.ai-tip-dot {
+  margin-top: 0.3rem;
+  color: #2563eb;
+}
+
+.dark .ai-tip-row {
+  color: #e5e7eb;
+}
+.exercise-image-wrap {
+  margin-top: 0.5rem;
+}
+
+.exercise-image {
+  display: block;
+  max-width: 260px;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+}
+
+.exercise-image-status {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.exercise-image-status.error {
+  color: #b91c1c;
+}
+/* Centered, narrower cards */
+.card-wide {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.card-narrow {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* Calorie pill in Diet cards */
+.diet-cal-box {
+  min-width: 80px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: right;
+  background: #eef2ff;      /* soft indigo */
+  color: #3730a3;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.diet-cal-box-main {
+  font-size: 0.78rem;
+}
+
+.diet-cal-box-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.dark .diet-cal-box {
+  background: #111827;
+  color: #c7d2fe;
 }
